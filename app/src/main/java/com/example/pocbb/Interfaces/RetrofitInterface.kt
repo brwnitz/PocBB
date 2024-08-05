@@ -16,7 +16,7 @@ import retrofit2.http.Query
 interface RetrofitInterface {
     @POST("pix/v2/cob")
     fun createPix(
-        @Query("gw-dev-app-key") gwDevAppKey: String,
+        @Query("gw-dev-app-key") gwDevAppKey: String?,
         @Header("Authorization") authorization: String,
         @Header("Content-Type") contentType: String = "application/json",
         @Body pixChargeRequest: PixChargeRequest) : Call<PixChargeResponse>
@@ -25,8 +25,8 @@ interface RetrofitInterface {
     @FormUrlEncoded
     fun getToken(
         @Header("Authorization") authorization: String,
+        @Field("content-type") contentType: String = "application/x-www-form-urlencoded",
         @Field("grant_type") grantType: String = "client_credentials",
-        @Field("scope") scope: String = "cob.write&20cob.read",
     ): Call<TokenResponse>
 
 }

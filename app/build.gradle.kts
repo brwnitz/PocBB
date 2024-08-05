@@ -11,8 +11,8 @@ android {
         applicationId = "com.example.pocbb"
         minSdk = 24
         targetSdk = 34
-        versionCode = 1
-        versionName = "1.0"
+        versionCode = 2
+        versionName = "1.0.1"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
@@ -87,4 +87,15 @@ dependencies {
     implementation("androidx.lifecycle:lifecycle-viewmodel:2.8.3")
     implementation("androidx.navigation:navigation-compose:2.7.7")
     implementation("io.github.g0dkar:qrcode-kotlin:4.1.1")
+
+    //Moxy
+    implementation ("com.github.moxy-community:moxy:2.2.2")
+    implementation ("com.github.moxy-community:moxy-androidx:2.2.2")
+    implementation ("com.github.moxy-community:moxy-ktx:2.2.2")
+
+    //ZXING
+    implementation ("com.journeyapps:zxing-android-embedded:4.1.0")
+    implementation ("com.google.zxing:core:3.3.3")
+
+    implementation("com.google.code.gson:gson:2.8.8")
 }

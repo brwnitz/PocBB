@@ -19,12 +19,17 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.asImageBitmap
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontWeight
@@ -37,11 +42,24 @@ import com.example.poc_bb.Models.Devedor
 import com.example.poc_bb.Models.InfoAdicionais
 import com.example.poc_bb.Models.PixChargeRequest
 import com.example.poc_bb.Models.Valor
+import com.example.poc_bb.Utils.SharedPreferencesUtil
+import com.example.pocbb.Presenter.MainPresenter
 import com.example.pocbb.Presenter.QrPresenter
 import com.example.pocbb.R
+import kotlinx.coroutines.delay
 
 @Composable
 fun QrScreen(qrPresenter: QrPresenter, navController: NavController? = null) {
+    var countdown by remember {
+        mutableIntStateOf(SharedPreferencesUtil.getInstance().readData("pixExpiration","0")!!.toInt())
+    }
+
+    LaunchedEffect(countdown){
+        while (countdown > 0){
+            delay(1000L)
+            countdown--
+        }
+    }
 
     val qrBitmap by qrPresenter.qrCodeBitmap
     Box(modifier = Modifier
@@ -68,7 +86,7 @@ fun QrScreen(qrPresenter: QrPresenter, navController: NavController? = null) {
                     Text(text = "Status", style = MaterialTheme.typography.bodySmall.copy(color = Color.White), fontWeight = FontWeight.Bold, modifier = Modifier.padding(top = 5.dp, bottom = 16.dp))
                     Image(painter = painterResource(id = R.drawable.clock_icon), contentDescription = "icon_clock", modifier = Modifier.size(50.dp))
                     Text(text="pendente", style = MaterialTheme.typography.bodyMedium.copy(color = Color.Yellow), fontWeight = FontWeight.Bold, modifier = Modifier.padding(top = 2.dp))
-                    Text(text="expira em...", style = MaterialTheme.typography.bodySmall.copy(color = MaterialTheme.colorScheme.secondary), modifier = Modifier.padding(top = 10.dp))
+                    Text(text="expira em... ${formateSecondsToMinutes(countdown)}", style = MaterialTheme.typography.bodySmall.copy(color = MaterialTheme.colorScheme.secondary), modifier = Modifier.padding(top = 10.dp))
                 }
             }
         }
@@ -79,4 +97,10 @@ fun QrScreen(qrPresenter: QrPresenter, navController: NavController? = null) {
             Icon(Icons.Filled.KeyboardArrowLeft, contentDescription = "BackArrow", tint = MaterialTheme.colorScheme.primary, modifier = Modifier.size(42.dp))
         }
     }
+}
+
+fun formateSecondsToMinutes(seconds: Int): String{
+    val minutes = seconds / 60
+    val seconds = seconds % 60
+    return String.format("%02d:%02d", minutes, seconds)
 }

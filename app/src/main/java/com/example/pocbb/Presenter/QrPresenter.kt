@@ -17,13 +17,11 @@ class QrPresenter(private val pixManager: PixManager, private val context: Conte
     var qrCodeBitmap = mutableStateOf<Bitmap?>(null)
         private set
 
-    suspend fun createPixAndQR(pixChargeRequest: PixChargeRequest, navController: NavHostController? = null){
-            pixManager.createPixKey(pixChargeRequest, navController!!)
-            val sharedPreferencesUtil = SharedPreferencesUtil(context)
-            val QRCodeUtil = QRCodeUtil()
-            val qrCode = sharedPreferencesUtil.readData("pixKey", "")
-            if (qrCode != null && qrCode != "") {
-                qrCodeBitmap.value = QRCodeUtil.generateQRCode(qrCode)
-            }
+    suspend fun createPixAndQR(pixChargeRequest: PixChargeRequest, navController: NavHostController? = null, onSuccess: () -> Unit, onError: (Boolean) -> Unit){
+            val qrCodeUtil = QRCodeUtil()
+            pixManager.createPixKey(pixChargeRequest, navController!!, onSuccess, onError, updatePix = { qrCode ->
+                if (qrCode != null && qrCode != "") {
+                    qrCodeBitmap.value = qrCodeUtil.generateQRCode(qrCode)
+            }})
     }
 }

@@ -94,9 +94,12 @@ import com.example.poc_bb.Utils.SharedPreferencesUtil
 import com.example.pocbb.Presenter.MainPresenter
 import com.example.pocbb.Presenter.QrPresenter
 import com.example.pocbb.R
+import com.example.pocbb.Views.Interfaces.MainActivityInterface
 import com.example.pocbb.appModule
 import com.example.pocbb.ui.theme.PocBBTheme
 import kotlinx.coroutines.delay
+import moxy.MvpAppCompatActivity
+import moxy.ktx.moxyPresenter
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -109,6 +112,8 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         WindowCompat.setDecorFitsSystemWindows(window, false)
+        SharedPreferencesUtil.initialize(applicationContext)
+        SharedPreferencesUtil.getInstance().saveData("showSplashScreen", "true")
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.R){
             val controller = WindowInsetsControllerCompat(window, window.decorView)
             controller.hide(WindowInsets.Type.statusBars() or WindowInsets.Type.navigationBars())
@@ -154,7 +159,7 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             PocBBTheme {
-                AppNavigation(qrPresenter = qrPresenter)
+                AppNavigation(qrPresenter)
             }
         }
     }
@@ -170,7 +175,7 @@ fun AppNavigation(qrPresenter: QrPresenter){
             MainScreen(navController, sharedPreferencesUtil, qrPresenter)
         }
         composable("config"){
-            ConfigScreen(navController, sharedPreferencesUtil)
+            ConfigScreen(navController, sharedPreferencesUtil, context = LocalContext.current)
         }
         composable("qr"){
             sharedPreferencesUtil.saveData("pixValue", "")

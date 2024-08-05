@@ -19,19 +19,14 @@ import javax.net.ssl.X509TrustManager
 class TokenManager(private val context: Context) {
     private val sharedPreferences = context.getSharedPreferences("app", Context.MODE_PRIVATE)
 
-    fun createAndSaveBearerToken(clientId: String, clientSecret: String){
+    fun createAndSaveBearerToken(clientId: String?, clientSecret: String?){
         val sslUtil = SSLUtil()
         val credentials = "$clientId:$clientSecret"
         val basicAuth = "Basic " + android.util.Base64.encodeToString(credentials.toByteArray(), android.util.Base64.NO_WRAP)
 
-        val client = OkHttpClient.Builder()
-            .sslSocketFactory(sslUtil.sslContext.socketFactory, sslUtil.trustAllCerts[0] as X509TrustManager)
-            .hostnameVerifier { _, _ -> true }
-            .build()
-
         val retrofit = Retrofit.Builder()
-            .baseUrl("https://oauth.sandbox.bb.com.br/")
-            .client(client)
+            .baseUrl("https://oauth.bb.com.br/")
+            .client(sslUtil.createUnsafeOkHttpClient())
             .addConverterFactory(GsonConverterFactory.create())
             .build()
 

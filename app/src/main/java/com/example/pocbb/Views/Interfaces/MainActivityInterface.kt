@@ -1,4 +1,6 @@
 package com.example.pocbb.Views.Interfaces
 
-interface MainActivityInterface {
+import moxy.MvpView
+
+interface MainActivityInterface : MvpView {
 }
