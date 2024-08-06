@@ -4,11 +4,11 @@ plugins {
 }
 
 android {
-    namespace = "com.example.pocbb"
+    namespace = "com.gfxconsultoria.pocbb"
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "com.example.pocbb"
+        applicationId = "com.gfxconsultoria.pocbb"
         minSdk = 24
         targetSdk = 34
         versionCode = 2
